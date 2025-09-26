@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "supersecret"; // replace with env var in prod
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret"; // replaced in env
 
 export function generateToken(payload: object) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });

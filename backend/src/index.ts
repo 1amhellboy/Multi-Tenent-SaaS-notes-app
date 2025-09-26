@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import noteRoutes from "./routes/note.route";
+import tenantRoutes from "./routes/tenant.route";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get("/health", (req, res) =>
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/notes", noteRoutes);
+app.use("/tenants", tenantRoutes);
 
 const PORT = process.env.PORT || 4000;
 console.log("Starting server...");
