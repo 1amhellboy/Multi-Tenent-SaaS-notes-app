@@ -13,7 +13,10 @@ export async function createNoteController(req: AuthRequest, res: Response) {
     const { title, content } = req.body;
     const note = await createNoteService(title, content, req.user!.tenantId, req.user!.id);
     res.status(201).json(note);
-  } catch (err) {
+  } catch (err:any) {
+    if(err.message.includes("Note limit reached")) {
+      return res.status(403).json({ message: err.message });
+    }
     console.error("Create note error:", err);
     res.status(500).json({ message: "Failed to create note" });
   }

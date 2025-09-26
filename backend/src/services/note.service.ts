@@ -1,6 +1,20 @@
 import prisma from "../prisma";
 
 export async function createNoteService(title: string, content: string, tenantId: string, authorId: string) {
+
+  const tenant = await prisma.tenant.findUnique({
+    where: { id: tenantId },
+    include: { notes: true },
+  });
+
+  if(!tenant) {
+    throw new Error("Tenant not found");
+  }
+
+  if(tenant.plan === "FREE" && tenant.notes.length >= 3) {
+    throw new Error("Note limit reached, Please upgrade to Pro.");
+  }
+
   return prisma.note.create({
     data: { title, content, tenantId, authorId },
   });
