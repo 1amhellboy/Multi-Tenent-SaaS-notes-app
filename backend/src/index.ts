@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route";
+import userRoutes from "./routes/user.route";
+import noteRoutes from "./routes/note.route";
 
 dotenv.config();
 
@@ -15,6 +17,8 @@ app.get("/health", (req, res) =>
 );
 
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/notes", noteRoutes);
 
 const PORT = process.env.PORT || 4000;
 console.log("Starting server...");
