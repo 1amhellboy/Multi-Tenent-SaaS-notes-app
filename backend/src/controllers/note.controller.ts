@@ -41,23 +41,48 @@ export async function getNoteByIdController(req: AuthRequest, res: Response) {
   }
 }
 
+
+
 export async function updateNoteController(req: AuthRequest, res: Response) {
   try {
     const { title, content } = req.body;
-    const result = await updateNoteService(req.params.id, req.user!.tenantId, title, content);
-    if (result.count === 0) return res.status(404).json({ message: "Note not found or unauthorized" });
-    res.json({ message: "Note updated" });
+
+    const updatedNote = await updateNoteService(
+      req.params.id,
+      req.user!.tenantId,
+      req.user!.id,
+      req.user!.role.toLowerCase(),
+      title,
+      content
+    );
+
+    if (!updatedNote) {
+      return res.status(403).json({ message: "Not authorized or note not found" });
+    }
+
+    res.json(updatedNote); 
   } catch (err) {
+    console.error("❌ Update note error:", err);
     res.status(500).json({ message: "Failed to update note" });
   }
 }
 
 export async function deleteNoteController(req: AuthRequest, res: Response) {
   try {
-    const result = await deleteNoteService(req.params.id, req.user!.tenantId);
-    if (result.count === 0) return res.status(404).json({ message: "Note not found or unauthorized" });
-    res.json({ message: "Note deleted" });
+    const deletedNote = await deleteNoteService(
+      req.params.id,
+      req.user!.tenantId,
+      req.user!.id,
+      req.user!.role.toLowerCase()
+    );
+
+    if (!deletedNote) {
+      return res.status(403).json({ message: "Not authorized or note not found" });
+    }
+
+    res.json(deletedNote); 
   } catch (err) {
+    console.error("❌ Delete note error:", err);
     res.status(500).json({ message: "Failed to delete note" });
   }
 }
